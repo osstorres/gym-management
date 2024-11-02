@@ -18,6 +18,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+admin.site.site_header = 'Gym Zone Admin'
+admin.site.site_title = 'Gym | Zone Admin'
+
+
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("gymzone/", admin.site.urls),
 ]
