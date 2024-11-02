@@ -25,7 +25,7 @@ COPY pyproject.toml poetry.lock ./
 # Construye las dependencias usando buildkit cache mounts
 RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install
 
-COPY ./src/ /app/
+COPY / /app/
 
 # Crea grupo y usuario para ejecutar la aplicación
 RUN groupadd -g 700 gym && useradd -g gym gym && chown gym:gym -R /app
