@@ -1,0 +1,67 @@
+services:
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DATABASE=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB_PORT=5432
+
+  superuser:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DJANGO_SUPERUSER_PASSWORD=admin
+      - DJANGO_SUPERUSER_USERNAME=admin
+      - DJANGO_SUPERUSER_EMAIL=dev@dev.test
+      - POSTGRES_DATABASE=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=db
+      - POSTGRES_DB_PORT=5432
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+
+    command: python manage.py createsuperuser --no-input
+    depends_on:
+      - migrate
+
+  gym:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_DATABASE=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=db
+      - POSTGRES_DB_PORT=5432
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - default
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_DATABASE=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=db
+      - POSTGRES_DB_PORT=5432
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+    command: python manage.py migrate
+    depends_on:
+      - db
+
+networks:
+  default:
+    ipam:
+      driver: default
