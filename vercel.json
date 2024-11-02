@@ -17,7 +17,7 @@
       "dest": "/staticfiles/$1"
     },
     {
-      "src": "/(.)",
+       "src": "/(.*)",
       "dest": "gym_management/wsgi.py"
     }
   ]
