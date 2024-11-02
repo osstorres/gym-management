@@ -1,0 +1,24 @@
+{
+  "builds": [
+    {
+      "src": "projectname/wsgi.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.10" }
+    },
+    {
+      "src": "build.sh",
+      "use": "@vercel/static-build",
+      "config": { "distDir": ".vercel/output" }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.)",
+      "dest": "/staticfiles/$1"
+    },
+    {
+      "src": "/(.)",
+      "dest": "src/gym_management/wsgi.py"
+    }
+  ]
+}
